@@ -1,0 +1,59 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+.tab {
+    @apply grid grid-cols-12 gap-3 rounded-xl border shadow-sm text-sm hover:bg-gray-100 active:shadow-none;
+}
+
+.tab.title {
+    @apply border-none max-[1000px]:hidden;
+}
+
+.tab .cell {
+    @apply border-r p-4 flex items-center;
+}
+
+.tab .cell:last-of-type {
+    @apply border-none
+}
+
+.tab .title-cell {
+    @apply whitespace-nowrap px-4;
+}
+
+.primary-badge {
+    @apply bg-orange-500 text-white rounded-3xl px-6 py-1.5 font-bold text-xs text-center;
+}
+
+.success-badge {
+    @apply bg-green-500 text-white rounded-3xl px-6 py-1.5 font-bold text-xs text-center;
+}
+
+.fail-badge {
+    @apply bg-red-500 text-white rounded-3xl px-6 py-1.5 font-bold text-xs text-center;
+}
+
+.space-y-6 .fixed {
+    margin-top: 0 !important;
+}
+
+@layer components {
+    .grid-box {
+        @apply grid gap-6;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    }
+}
+
+
+@media (max-width: 1000px) {
+    .tab {
+        @apply grid-cols-3 py-2 gap-0;
+    }
+
+    .tab .cell {
+        @apply col-span-3 px-4 py-3 border-b border-r-0 leading-none;
+    }
+}
