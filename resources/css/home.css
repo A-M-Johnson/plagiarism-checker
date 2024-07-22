@@ -103,11 +103,22 @@ header .Login{
 .container{
     width: var(--container-width);
     margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 2rem;
+    color: var(--h1-color);
+}
+
+.container-flex {
+    width: var(--container-width);
+    margin: 0 auto;
     display: flex;
     align-items: center;
     gap: 2rem;
     color: var(--h1-color);
 }
+
 .line{
     height: 2px;
     width: 200px;
