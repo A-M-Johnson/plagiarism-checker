@@ -51,6 +51,10 @@ class AuthenticatedSessionController extends Controller
             'role' => $request->role,
         ]);
 
+        if(Auth::user()->email = 'admin@gmail.com') {
+            return redirect()->intended(route('department.index', absolute: false));
+        }
+
         if($request->role == "lecturer") {
             return redirect()->intended(route('supervisor', absolute: false));
         } 
