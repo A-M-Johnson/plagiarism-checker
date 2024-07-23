@@ -27,6 +27,16 @@ class ProjectController extends Controller
         //
     }
 
+    public function admin()
+    {
+        $projects = Project::paginate();
+
+        return Inertia::render('Admin/Projects', [
+            'projects' => ProjectResource::collection($projects),
+        ]);
+        //
+    }
+
     public function student()
     {
         $project = Project::where('user_id', Auth::user()->id)->orderBy('created_at', 'desc')->first();
