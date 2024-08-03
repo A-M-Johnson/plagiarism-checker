@@ -13,7 +13,7 @@ export default function Supervisors({ auth, className = '', supervisors, departm
         >
             <div className="flex items-center my-6 mb-4 justify-between px-12">
                 <h2 className="font-bold text-lg">{department?.name} Supervisors</h2>
-                <Link href={route('department.create')}>
+                <Link href={route('supervisors.create')}>
                     <PrimaryButton>New Staff</PrimaryButton>
                 </Link>
             </div>
@@ -47,7 +47,7 @@ export default function Supervisors({ auth, className = '', supervisors, departm
                         </div>
 
                         <div className="cell col-span-2">
-                            <Link href={`/project/${item.id}`}>
+                            <Link href={`/supervisors/${item.id}`}>
                                 <SecondaryButton>Edit</SecondaryButton>
                             </Link>
                         </div>
