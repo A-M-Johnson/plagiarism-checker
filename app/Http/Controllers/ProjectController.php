@@ -69,7 +69,7 @@ class ProjectController extends Controller
     public function getSupervisors() {
         $department_ids = UserDepartment::where('user_id', Auth::user()->id)->get()->pluck('department_id');
         $supervisor_ids = UserDepartment::whereIn('department_id', $department_ids)->where('role', 'lecturer')->get()->pluck('user_id');
-        $supervisors = User::where('id', $supervisor_ids)->get();
+        $supervisors = User::whereIn('id', $supervisor_ids)->get();
 
         return $supervisors;
     }

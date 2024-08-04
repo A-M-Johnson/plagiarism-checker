@@ -3,13 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreDepartmentRequest;
+use App\Http\Requests\StoreSupervisorRequest;
 use App\Http\Requests\UpdateDepartmentRequest;
+use App\Http\Requests\UpdateSupervisorRequest;
 use App\Http\Resources\DepartmentResource;
 use App\Http\Resources\ProjectResource;
 use App\Models\Department;
 use App\Models\Project;
 use App\Models\User;
 use App\Models\UserDepartment;
+use Illuminate\Support\Facades\Hash;
 use Inertia\Inertia;
 
 class SupervisorController extends Controller
@@ -52,22 +55,49 @@ class SupervisorController extends Controller
     public function create()
     {
         //
+
+
+
+        return Inertia::render('Admin/NewSupervisor', [
+            'departments' => Department::all(),
+        ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreDepartmentRequest $request)
+    public function store(StoreSupervisorRequest $request)
     {
-        //
+        $user = User::create([
+            'name'  => $request->name,
+            'index' => $request->index,
+            'index_number' => $request->index,
+            'password' => Hash::make($request->password),
+        ]);
+
+        UserDepartment::create([
+            'department_id' => $request->department,
+            'user_id' => $user->id,
+            'role' => 'lecturer',
+        ]);
+
+        return back()->withError(['success' => 'Supervisor Created Successfully']);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Department $department)
+    public function show(User $supervisor)
     {
         //
+
+        $department = UserDepartment::where('user_id', $supervisor->id)->first();
+        $supervisor->department = $department->department_id;
+
+        return Inertia::render('Admin/EditSupervisor', [
+            'departments' => Department::all(),
+            'supervisor' => $supervisor,
+        ]);
     }
 
     /**
@@ -81,9 +111,20 @@ class SupervisorController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateDepartmentRequest $request, Department $department)
+    public function update(UpdateSupervisorRequest $request, User $supervisor)
     {
-        //
+        $supervisor->update([
+            'name' => $request->name ?? $supervisor->name,
+            'index_number' => $request->index ?? $supervisor->index,
+            'email' => $request->email ?? $supervisor->email,
+            'password' => $request->password ? Hash::make($request->password) : $supervisor->password,
+        ]);
+
+        if($request->department) 
+            UserDepartment::where('user_id', $supervisor->id)->first()
+                          ->update(['department_id' => $request->department]);
+
+        return back()->withError(['success' => 'Supervisor Updated Successfully']);
     }
 
     /**

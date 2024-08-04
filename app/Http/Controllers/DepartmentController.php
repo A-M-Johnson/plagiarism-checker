@@ -84,7 +84,10 @@ class DepartmentController extends Controller
      */
     public function show(Department $department)
     {
-        //
+        return Inertia::render('Department/EditDepartment', [
+            'department' => $department
+        ]);
+        
     }
 
     /**
@@ -100,7 +103,12 @@ class DepartmentController extends Controller
      */
     public function update(UpdateDepartmentRequest $request, Department $department)
     {
-        //
+        $department->update([
+            'name' => $request->name ?? $department->name,
+            'max_year' => $request->level ?? $department->max_year
+        ]);
+
+        return back()->withError(['success' => 'Department Updated Successfully']);
     }
 
     /**
