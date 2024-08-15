@@ -48,7 +48,7 @@ export default function Supervisor({ auth, className = '', departments}) {
                         </div>
 
                         <div className="cell col-span-2">
-                            <Link href={`/department/${item.id}`}>
+                            <Link href={`/project/${item.id}`}>
                                 <SecondaryButton>Edit</SecondaryButton>
                             </Link>
                         </div>
