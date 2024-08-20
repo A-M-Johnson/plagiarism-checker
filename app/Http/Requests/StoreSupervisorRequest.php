@@ -24,7 +24,7 @@ class StoreSupervisorRequest extends FormRequest
         return [
             'name' => ['required'],
             'email' => ['required', 'unique:users,email'],
-            'index' => ['required'],
+            'index' => ['required', 'unique:users,index_number'],
             'password' => ['required'],
             'department' => ['required']
         ];

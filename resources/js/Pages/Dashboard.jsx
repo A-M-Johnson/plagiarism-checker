@@ -32,8 +32,9 @@ export default function Dashboard({ auth, project }) {
             {project && 
                 <div className="min-h-[600px] w-full flex flex-col items-center justify-center">
 
-                    <div className={`flex items-center justify-center h-[170px] w-[300px] rounded-full overflow-hidden mx-auto text-7xl font-semibold border-4 ${project.status == "pending" ? "border-orange-400 text-orange-400" : project.status == "approved" ? "border-green-400 text-green-400" : "border-red-500 text-red-500"}`}>
+                    <div className={`flex flex-col items-center justify-center h-[170px] w-[300px] rounded-full overflow-hidden mx-auto text-7xl font-semibold border-4 ${project.status == "pending" ? "border-orange-400 text-orange-400" : project.status == "approved" ? "border-green-400 text-green-400" : "border-red-500 text-red-500"}`}>
                         {project.score.toString().padStart(3, '0')}%
+                        <span className="font-bold text-lg text-center">similarity</span>
                     </div>
 
                     <div className="text-center mt-4 mb-2">

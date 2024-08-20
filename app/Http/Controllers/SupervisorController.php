@@ -70,6 +70,7 @@ class SupervisorController extends Controller
     {
         $user = User::create([
             'name'  => $request->name,
+            'email' => $request->email,
             'index' => $request->index,
             'index_number' => $request->index,
             'password' => Hash::make($request->password),

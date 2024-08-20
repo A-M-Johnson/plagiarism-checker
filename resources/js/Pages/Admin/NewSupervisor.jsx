@@ -26,6 +26,7 @@ export default function Upload({ auth, departments, className = '' }) {
             onSuccess: () => {
                 reset();
                 window.history.back();
+                location.reload();
             },
             onError: (errors) => {
                 if (errors.name) {

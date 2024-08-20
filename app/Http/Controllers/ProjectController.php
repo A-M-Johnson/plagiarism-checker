@@ -10,7 +10,11 @@ use App\Models\Screenshot;
 use App\Models\User;
 use App\Models\UserDepartment;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
+use App\Events\ProjectApproved;
+
 
 class ProjectController extends Controller
 {
@@ -80,7 +84,12 @@ class ProjectController extends Controller
     public function store(StoreProjectRequest $request)
     {
 
+        if(!($score = $this->sendPostRequest($request->title . " " . $request->description))) {
+            return back()->withErrors(['title' => 'Plagiarism Model Unavailable, please try again later']);
+        }
+
         if(!($file = $request->file('file')->store('project_files'))) redirect('/project/create')->withErrors(['file', 'Unable to upload project file']);
+        
 
         $project = Project::create([
             'title'         => $request->title,
@@ -89,7 +98,7 @@ class ProjectController extends Controller
             'department_id' => session('department_id'),
             'supervisor_id' => $request->supervisor,
             'user_id'       => Auth::user()->id,
-            'score'         => 0,
+            'score'         => $score,
         ]);
         
         foreach($request->file('screenshots') as $screenshot) {
@@ -105,6 +114,44 @@ class ProjectController extends Controller
 
         return redirect('/dashboard')->with(["success" => "Project Uploaded Successfully"]);
 
+    }
+
+    public function sendPostRequest($text)
+    {
+        try {
+
+            // The URL of the API or the endpoint to which the request will be sent
+            $url = env('MODEL_PREDICT_URL', 'https://web-production-fbb59.up.railway.app/predict');
+    
+            // The data you want to send in the request
+            $data = [
+                'text' => $text,
+            ];
+    
+            // Send the POST request using the Http facade
+            $response = Http::post($url, $data);
+
+
+            Log::info('message', [
+                "response" => $response,
+            ]);
+    
+            // Handle the response
+            if ($response->successful()) {
+                return $response->json()['prediction'];
+            } else {
+                // Handle errors
+                return false;
+            }
+
+        }
+        catch(\Exception $e) {
+            Log::error('Failed to store user data: ' . $e->getMessage(), [
+                'exception' => $e,
+                'request_data' => $request->all(),
+            ]);
+            return false;
+        }
     }
 
     /**
@@ -136,6 +183,8 @@ class ProjectController extends Controller
         $project->update([
             'status' => $request->status
         ]);
+
+        event(new ProjectApproved($project, $request->status));
 
         return back()->with(['success' => "project {$request->status} successfully"]);
     }
